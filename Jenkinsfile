@@ -23,17 +23,22 @@ pipeline {
                 sh 'docker run -d --name nginx --network my-network -p 80:80 nginx-image'
             }
         }
+        stage("Security Scan") {
+            steps {
+                sh "trivy fs --format json -o trivy-report.json ."
+            }
+            post {
+                always {
+                    // Archive the Trivy report
+                    archiveArtifacts artifacts: 'trivy-report.json', onlyIfSuccessful: true
+                }
+            }
+        }
         stage('tests'){
             steps {
                 sh 'chmod +x ./unit-test.sh'
                 sh './unit-test.sh'
             }
-        }
-    }
-    post {
-        always {
-            sh 'trivy fs . -f json -o results.json'
-            archiveArtifacts artifacts: 'results.json'
         }
     }
 }
