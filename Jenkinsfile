@@ -1,21 +1,24 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage("prepare"){
-            steps{
-                sh ./cleanup.sh
-                docker network create my-network
+
+    stages {
+        stage('Prepare') {
+            steps {
+                sh './cleanup.sh'
+                sh 'docker network create my-network || true'
             }
         }
-        stage("build images"){
-            steps{
-                docker build -t flask-image
+
+        stage('Build Images') {
+            steps {
+                sh 'docker build -t flask-image .'
             }
         }
-        stage("run containers"){
-            steps{
-                docker run --name flask-app --network my-network flask-image
-                docker run --name nginx --network -p 80:80 my-network nginx
+
+        stage('Run Containers') {
+            steps {
+                sh 'docker run -d --name flask-app --network my-network flask-image'
+                sh 'docker run -d --name nginx --network my-network -p 80:80 nginx'
             }
         }
     }
