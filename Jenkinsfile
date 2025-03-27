@@ -26,7 +26,7 @@ pipeline {
     }
     post{
         always{
-            step {
+            steps {
                 trivy fs -f json -o results.json
             }
             archiveArtifacts artifacts: results.json
