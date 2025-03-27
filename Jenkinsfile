@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
-                sh 'chmod o+x ./cleanup.sh'
+                sh 'chmod +x ./cleanup.sh'
                 sh './cleanup.sh || true'
                 sh 'docker network create my-network || true'
             }
