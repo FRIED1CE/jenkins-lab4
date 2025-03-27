@@ -24,12 +24,10 @@ pipeline {
             }
         }
     }
-    post{
-        always{
-            steps {
-                trivy fs -f json -o results.json
-            }
-            archiveArtifacts artifacts: results.json
+    post {
+        always {
+            sh 'trivy fs -f json -o results.json'
+            archiveArtifacts artifacts: 'results.json'
         }
     }
 }
