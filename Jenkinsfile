@@ -23,11 +23,11 @@ pipeline {
                 sh 'docker run -d --name nginx --network my-network -p 80:80 nginx-image'
             }
         }
-        post{
-            always{
-                trivy fs -f json -o results.json
-                archiveArtifacts artifacts: results.json
-            }
+    }
+    post{
+        always{
+            trivy fs -f json -o results.json
+            archiveArtifacts artifacts: results.json
         }
     }
 }
